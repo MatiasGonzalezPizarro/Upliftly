@@ -5,12 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import cl.duoc.upliftly.auth.presentation.login_screen.LoginScreen
+import cl.duoc.upliftly.auth.presentation.login_screen.LoginScreenRoot
+import cl.duoc.upliftly.auth.presentation.login_screen.LoginScreenViewModel
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +18,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             UpliftlyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val loginScreenViewModel= viewModel<LoginScreenViewModel>()
+                LoginScreenRoot(loginScreenViewModel = loginScreenViewModel)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UpliftlyTheme {
-        Greeting("Android")
-    }
-}
+
+
+
