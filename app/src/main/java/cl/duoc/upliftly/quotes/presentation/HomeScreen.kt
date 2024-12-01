@@ -1,9 +1,7 @@
 package cl.duoc.upliftly.quotes.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -14,8 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,16 +20,17 @@ import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.R
 import cl.duoc.upliftly.quotes.domain.Quote
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
+import coil.compose.AsyncImage
 
 @Composable
 fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote) {
     Card(modifier = modifier) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            Image(
-                painter = painterResource(R.drawable.test_background),
+            AsyncImage(
+                model = "https://picsum.photos/600/400/?blur=2",
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().blur(8.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                modifier = Modifier.fillMaxWidth()
             )
             Text(
                 text = quote.quote,
