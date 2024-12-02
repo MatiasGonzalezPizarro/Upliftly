@@ -6,5 +6,4 @@ import retrofit2.http.GET
 interface QuoteApiService {
     @GET("advice")
     suspend fun getRandomAdvice(): ApiAdvice
-
 }

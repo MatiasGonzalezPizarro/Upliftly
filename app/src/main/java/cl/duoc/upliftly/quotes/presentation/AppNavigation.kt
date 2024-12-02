@@ -26,11 +26,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.R
+import cl.duoc.upliftly.quotes.domain.Quote
+import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 
 @Composable
 fun AppScaffold(modifier: Modifier = Modifier) {
+    val quotes = (0..10).map {
+        Quote(
+            1,
+            "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
+            ""
+        )
+    }
     Scaffold(
         topBar = { TopBar() },
         bottomBar = { BottomBar() },
@@ -38,13 +48,16 @@ fun AppScaffold(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         Box(
             Modifier
-                .padding(innerPadding)
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
-        ) { Text(text = "hola") }
+        ) {
+            QuoteCardItemList(
+                quotes = quotes,
+                modifier = Modifier.padding(horizontal = 12.dp),
+                innerPadding = innerPadding
+            )
+        }
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +99,7 @@ fun BottomBar(modifier: Modifier = Modifier) {
                         contentDescription = null
                     )
                 },
-                label= { Text(text=navigationDestination.label) }
+                label = { Text(text = navigationDestination.label) }
             )
         }
 
