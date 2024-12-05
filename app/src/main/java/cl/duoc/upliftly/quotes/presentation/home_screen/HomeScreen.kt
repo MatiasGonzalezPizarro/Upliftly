@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -18,19 +21,26 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.quotes.domain.Quote
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 
 @Composable
 fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote, showFullQuote:Boolean = false) {
     Card(modifier = modifier) {
         Box(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                model = "https://picsum.photos/600/400/?blur=2",
+                     model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://picsum.photos/600/400/?blur=2") // Replace with your endpoint
+                    .memoryCachePolicy(CachePolicy.DISABLED) // Disable memory caching
+                    .diskCachePolicy(CachePolicy.DISABLED) // Disable disk caching
+                    .build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
@@ -56,9 +66,11 @@ fun QuoteCardItemList(
     quotes: List<Quote>,
     innerPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn(
+    LazyVerticalGrid(
+        columns= GridCells.Adaptive(300.dp),
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = innerPadding
     ) {
         items(quotes) {

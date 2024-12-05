@@ -11,10 +11,9 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.R
 import cl.duoc.upliftly.quotes.domain.Quote
+import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceScreen
+import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 
@@ -41,21 +42,44 @@ fun AppScaffold(modifier: Modifier = Modifier) {
             ""
         )
     }
-    Scaffold(
-        topBar = { TopBar() },
-        bottomBar = { BottomBar() },
-        modifier = modifier
-    ) { innerPadding ->
-        Box(
-            Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            QuoteCardItemList(
-                quotes = quotes,
-                modifier = Modifier.padding(horizontal = 12.dp),
-                innerPadding = innerPadding
-            )
+    val tabs = listOf(
+        NavigationDestination(label = "Favorite", icon = Icons.Default.Favorite),
+        NavigationDestination(label = "Advices", icon = Icons.Default.Accessibility),
+        NavigationDestination(label = "Profile", icon = Icons.Default.Person)
+    )
+    var currentTab by rememberSaveable { mutableIntStateOf(0) }
+    NavigationSuiteScaffold(
+        navigationSuiteItems = {
+            tabs.forEachIndexed { index, navigationDestination ->
+                item(
+                    icon = { Icon(navigationDestination.icon, contentDescription = null) },
+                    label = { Text(navigationDestination.label) },
+                    selected = currentTab == index,
+                    onClick = { currentTab = index }
+                )
+            }
+        }
+
+    ) {
+        Scaffold(
+            topBar = { TopBar() },
+            modifier = modifier
+        ) { innerPadding ->
+            Box(
+                Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                when(currentTab){
+                    0-> QuoteCardItemList(
+                        quotes = quotes,
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        innerPadding = innerPadding
+                    )
+                    1-> DiscoverAdviceScreen(modifier=Modifier )
+                    2-> Text(text="PELAO")
+                }
+            }
         }
     }
 }
@@ -81,31 +105,6 @@ data class NavigationDestination(
     val icon: ImageVector
 )
 
-@Composable
-fun BottomBar(modifier: Modifier = Modifier) {
-    val tabs = listOf(
-        NavigationDestination(label = "Favorite", icon = Icons.Default.Favorite),
-        NavigationDestination(label = "Advices", icon = Icons.Default.Accessibility),
-        NavigationDestination(label = "Profile", icon = Icons.Default.Person)
-    )
-    var currentTab by rememberSaveable { mutableIntStateOf(0) }
-    NavigationBar {
-        tabs.forEachIndexed { index, navigationDestination ->
-            NavigationBarItem(selected = index == currentTab,
-                onClick = { currentTab = index },
-                icon = {
-                    Icon(
-                        imageVector = navigationDestination.icon,
-                        contentDescription = null
-                    )
-                },
-                label = { Text(text = navigationDestination.label) }
-            )
-        }
-
-    }
-
-}
 
 @Preview
 @Composable

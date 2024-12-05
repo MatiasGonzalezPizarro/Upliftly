@@ -70,6 +70,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     // Coil
     implementation(libs.coil.compose)
+    implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

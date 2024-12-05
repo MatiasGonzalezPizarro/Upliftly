@@ -8,7 +8,12 @@ import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 
 @Composable
-fun DiscoverAdviceScreen(modifier: Modifier = Modifier, quote: Quote) {
+fun DiscoverAdviceScreen(modifier: Modifier = Modifier) {
+    val quote=Quote(
+        1,
+        "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
+        ""
+    )
     QuoteCardItem(quote = quote, modifier = modifier)
 
 }
@@ -18,12 +23,7 @@ fun DiscoverAdviceScreen(modifier: Modifier = Modifier, quote: Quote) {
 private fun DiscoverAdviceScreenPreview() {
     UpliftlyTheme {
         DiscoverAdviceScreen(
-            quote = Quote(
-                1,
-                "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
-                ""
-            )
-        )
 
+            )
     }
 }
