@@ -28,10 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.R
 import cl.duoc.upliftly.quotes.domain.Quote
+import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceRoute
 import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceScreen
-import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
+import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceViewModel
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppScaffold(modifier: Modifier = Modifier) {
@@ -39,7 +41,7 @@ fun AppScaffold(modifier: Modifier = Modifier) {
         Quote(
             1,
             "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
-            ""
+
         )
     }
     val tabs = listOf(
@@ -76,7 +78,7 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                         modifier = Modifier.padding(horizontal = 12.dp),
                         innerPadding = innerPadding
                     )
-                    1-> DiscoverAdviceScreen(modifier=Modifier )
+                    1-> DiscoverAdviceRoute(viewModel = koinViewModel<DiscoverAdviceViewModel>())
                     2-> Text(text="PELAO")
                 }
             }

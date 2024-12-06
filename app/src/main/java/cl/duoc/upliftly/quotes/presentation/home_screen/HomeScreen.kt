@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -27,9 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.quotes.domain.Quote
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
-import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+
 
 @Composable
 fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote, showFullQuote:Boolean = false) {
@@ -49,8 +49,9 @@ fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote, showFullQuote:Boo
                 text = quote.quote,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(32.dp)
-                    .blendMode(BlendMode.Difference),
+                    .blendMode(BlendMode.Difference)
+                    .padding(24.dp),
+                    color = Color.White,
                 style = MaterialTheme.typography.headlineLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = if (showFullQuote) Int.MAX_VALUE else 4
@@ -100,7 +101,7 @@ private fun QuoteCardItemListPreview() {
         Quote(
             1,
             "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
-            ""
+
         )
     }
     UpliftlyTheme {
@@ -119,7 +120,7 @@ private fun QuoteCardItemPreview() {
             quote = Quote(
                 1,
                 "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
-                ""
+
             )
         )
     }

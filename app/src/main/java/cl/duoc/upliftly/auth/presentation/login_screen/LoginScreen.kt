@@ -33,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cl.duoc.upliftly.R
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
-import kotlin.reflect.KFunction1
 
 @Composable
 fun LoginScreenRoot(modifier: Modifier = Modifier, loginScreenViewModel: LoginScreenViewModel) {

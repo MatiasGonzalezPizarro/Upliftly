@@ -1,6 +1,5 @@
 package cl.duoc.upliftly.auth.presentation.login_screen
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

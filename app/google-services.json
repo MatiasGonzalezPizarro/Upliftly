@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "265392185816",
+    "project_id": "uplitfly",
+    "storage_bucket": "uplitfly.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265392185816:android:53fda4e8d5289e8ffa92ad",
+        "android_client_info": {
+          "package_name": "cl.duoc.upliftly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMXBJy3gCPIt66_Ajxwx241nYn_P4wmWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
