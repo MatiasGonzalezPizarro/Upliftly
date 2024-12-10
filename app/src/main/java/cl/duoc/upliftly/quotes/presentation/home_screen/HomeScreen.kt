@@ -32,15 +32,21 @@ import coil3.request.ImageRequest
 
 
 @Composable
-fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote, showFullQuote:Boolean = false) {
+fun QuoteCardItem(
+    modifier: Modifier = Modifier,
+    quote: Quote,
+    showFullQuote: Boolean = false,
+    cachedImage: Boolean = false
+) {
+    val model = ImageRequest.Builder(LocalContext.current)
+        .data("https://picsum.photos/600/400/?blur=2") // Replace with your endpoint
+        .memoryCachePolicy(if (cachedImage) CachePolicy.ENABLED else CachePolicy.DISABLED) // Disable memory caching
+        .diskCachePolicy(if (cachedImage) CachePolicy.ENABLED else CachePolicy.DISABLED) // Disable disk caching
+        .build()
     Card(modifier = modifier) {
         Box(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                     model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://picsum.photos/600/400/?blur=2") // Replace with your endpoint
-                    .memoryCachePolicy(CachePolicy.DISABLED) // Disable memory caching
-                    .diskCachePolicy(CachePolicy.DISABLED) // Disable disk caching
-                    .build(),
+                model = model,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
@@ -49,9 +55,8 @@ fun QuoteCardItem(modifier: Modifier = Modifier, quote: Quote, showFullQuote:Boo
                 text = quote.quote,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .blendMode(BlendMode.Difference)
                     .padding(24.dp),
-                    color = Color.White,
+                color = Color.White,
                 style = MaterialTheme.typography.headlineLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = if (showFullQuote) Int.MAX_VALUE else 4
@@ -68,14 +73,14 @@ fun QuoteCardItemList(
     innerPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyVerticalGrid(
-        columns= GridCells.Adaptive(300.dp),
+        columns = GridCells.Adaptive(300.dp),
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = innerPadding
     ) {
         items(quotes) {
-            QuoteCardItem(quote = it)
+            QuoteCardItem(quote = it, cachedImage = true)
         }
     }
 }
@@ -102,7 +107,7 @@ private fun QuoteCardItemListPreview() {
             1,
             "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
 
-        )
+            )
     }
     UpliftlyTheme {
         QuoteCardItemList(
@@ -121,7 +126,8 @@ private fun QuoteCardItemPreview() {
                 1,
                 "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
 
-            )
+                ),
+            cachedImage = true
         )
     }
 
