@@ -6,6 +6,8 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,9 +34,13 @@ fun DiscoverAdviceScreen(
     updateCurrentQuote: (Quote?) -> Unit
 ) {
     val pagerState = rememberPagerState { 5 }
+    val coroutineScope = rememberCoroutineScope()
+
     VerticalPager(state = pagerState) { page ->
         val quote = uiState.quotes.getOrNull(page)
-        updateCurrentQuote(quote)
+        LaunchedEffect(page) {
+            updateCurrentQuote(quote)
+        }
         if (quote == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
@@ -48,11 +54,8 @@ fun DiscoverAdviceScreen(
                 showLocalImage = true
             )
         }
-
     }
-
 }
-
 @Preview
 @Composable
 private fun DiscoverAdviceScreenPreview() {

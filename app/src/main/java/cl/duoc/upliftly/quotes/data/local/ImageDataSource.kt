@@ -8,4 +8,9 @@ val images = listOf(
     R.drawable.advicebackground2,
     R.drawable.advicebackground3,
     R.drawable.advicebackground4,
+    R.drawable.advicebackground5,
+    R.drawable.advicebackground6,
+    R.drawable.advicebackground7,
+    R.drawable.advicebackground8,
+    R.drawable.advicebackround9,
 )

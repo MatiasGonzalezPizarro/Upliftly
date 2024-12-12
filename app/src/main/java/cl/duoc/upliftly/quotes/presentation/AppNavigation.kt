@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material.icons.filled.Favorite
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,8 +26,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,10 +42,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.duoc.upliftly.R
-import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceRoute
 import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceViewModel
+import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -55,6 +61,8 @@ fun AppScaffold(modifier: Modifier = Modifier) {
     val favoriteQuotes = discoverAdviceViewModel.uiState.collectAsStateWithLifecycle()
     val currentAdvice = discoverAdviceViewModel.currentAdvice.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val pagerState = rememberPagerState { 5 }
+    val coroutineScope = rememberCoroutineScope()
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -67,7 +75,6 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                 )
             }
         }
-
     ) {
         Scaffold(
             topBar = { TopBar() },
@@ -76,7 +83,11 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                 AnimatedVisibility(currentTab == 1) {
                     Column {
                         FloatingActionButton(onClick = {
-                            currentAdvice.value?.let { discoverAdviceViewModel.onAdviceFavorited(it) }
+                            coroutineScope.launch {
+                                val currentPage = pagerState.currentPage
+                                val currentQuote = favoriteQuotes.value.quotes.getOrNull(currentPage)
+                                currentQuote?.let { discoverAdviceViewModel.onAdviceFavorited(it) }
+                            }
                         }) {
                             Icon(
                                 imageVector = if (currentAdvice.value?.isFavorite == true) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -85,8 +96,12 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         FloatingActionButton(onClick = {
-                            currentAdvice.value?.let {
-                                context.startActivity(discoverAdviceViewModel.onAdviceShared(it))
+                            coroutineScope.launch {
+                                val currentPage = pagerState.currentPage
+                                val currentQuote = favoriteQuotes.value.quotes.getOrNull(currentPage)
+                                currentQuote?.let {
+                                    context.startActivity(discoverAdviceViewModel.onAdviceShared(it))
+                                }
                             }
                         }) {
                             Icon(
@@ -111,7 +126,27 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                         innerPadding = innerPadding
                     )
 
-                    1 -> DiscoverAdviceRoute(viewModel = discoverAdviceViewModel)
+                    1 -> {
+                        VerticalPager(state = pagerState) { page ->
+                            val quote = favoriteQuotes.value.quotes.getOrNull(page)
+                            LaunchedEffect(page) {
+                                discoverAdviceViewModel.updateCurrentAdvice(quote)
+                            }
+                            if (quote == null) {
+                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator()
+                                }
+                            } else {
+                                QuoteCardItem(
+                                    modifier = Modifier.fillMaxSize(),
+                                    quote = quote,
+                                    showFullQuote = true,
+                                    cachedImage = true,
+                                    showLocalImage = true
+                                )
+                            }
+                        }
+                    }
                     2 -> Text("HOLA")
                 }
             }

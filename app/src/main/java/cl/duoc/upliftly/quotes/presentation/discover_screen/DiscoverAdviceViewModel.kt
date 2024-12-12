@@ -31,7 +31,7 @@ class DiscoverAdviceViewModel(
 
 
     private suspend fun getQuotes(): List<Quote> {
-        return (1..5).map {
+        return (0..4).map {
             quoteRepository.getRandomAdvice()
             // delay(2_000L)
         }
