@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +58,7 @@ fun LoginScreen(
     Surface(modifier = modifier) {
         Box(contentAlignment = Alignment.Center) {
             Column(Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                UpliftlyLogo()
+                UpliftlyLogo(text = stringResource(R.string.app_name))
                 Spacer(modifier = Modifier.height(48.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     TextField(
@@ -118,17 +118,17 @@ fun LoginScreen(
 }
 
 @Composable
-private fun UpliftlyLogo(modifier: Modifier = Modifier) {
+fun UpliftlyLogo(modifier: Modifier = Modifier, text: String) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(
-            imageVector = Icons.Default.AccountCircle,
+            imageVector = Icons.Default.Star,
             contentDescription = "Login Icon",
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier.size(144.dp),
             tint = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.app_name),
+            text = text,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
@@ -144,7 +144,7 @@ private fun LoginScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             email = "",
             password = "",
-            onPasswordChanged ={},
+            onPasswordChanged = {},
             onEmailChanged = {}
         )
     }

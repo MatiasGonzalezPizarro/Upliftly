@@ -19,22 +19,33 @@ import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 fun DiscoverAdviceRoute(modifier: Modifier = Modifier, viewModel: DiscoverAdviceViewModel) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    DiscoverAdviceScreen(uiState = uiState.value)
+    DiscoverAdviceScreen(
+        uiState = uiState.value,
+        updateCurrentQuote = viewModel::updateCurrentAdvice
+    )
 }
 
 @Composable
-fun DiscoverAdviceScreen(modifier: Modifier = Modifier, uiState: DiscoverScreenUiState) {
+fun DiscoverAdviceScreen(
+    modifier: Modifier = Modifier,
+    uiState: DiscoverScreenUiState,
+    updateCurrentQuote: (Quote?) -> Unit
+) {
     val pagerState = rememberPagerState { 5 }
     VerticalPager(state = pagerState) { page ->
         val quote = uiState.quotes.getOrNull(page)
-
+        updateCurrentQuote(quote)
         if (quote == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
-        }else{
+        } else {
             QuoteCardItem(
-                quote = quote, modifier = Modifier.fillMaxSize(), showFullQuote = true, cachedImage=true
+                modifier = Modifier.fillMaxSize(),
+                quote = quote,
+                showFullQuote = true,
+                cachedImage = true,
+                showLocalImage = true
             )
         }
 
@@ -52,10 +63,12 @@ private fun DiscoverAdviceScreenPreview() {
                     Quote(
                         1,
                         "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
+                        false,
 
                         )
                 )
-            )
+            ),
+            updateCurrentQuote = {}
         )
     }
 }

@@ -1,9 +1,12 @@
 package cl.duoc.upliftly.quotes.presentation.home_screen
 
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,12 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cl.duoc.upliftly.quotes.data.local.images
 import cl.duoc.upliftly.quotes.domain.Quote
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 import coil3.compose.AsyncImage
@@ -36,31 +42,49 @@ fun QuoteCardItem(
     modifier: Modifier = Modifier,
     quote: Quote,
     showFullQuote: Boolean = false,
-    cachedImage: Boolean = false
+    cachedImage: Boolean = false,
+    showLocalImage: Boolean = false
 ) {
     val model = ImageRequest.Builder(LocalContext.current)
-        .data("https://picsum.photos/600/400/?blur=2") // Replace with your endpoint
-        .memoryCachePolicy(if (cachedImage) CachePolicy.ENABLED else CachePolicy.DISABLED) // Disable memory caching
-        .diskCachePolicy(if (cachedImage) CachePolicy.ENABLED else CachePolicy.DISABLED) // Disable disk caching
+        .data("https://picsum.photos/600/400/?blur=4") // Replace with your endpoint
+        .memoryCachePolicy(if (cachedImage) CachePolicy.DISABLED else CachePolicy.DISABLED) // Disable memory caching
+        .diskCachePolicy(if (cachedImage) CachePolicy.DISABLED else CachePolicy.DISABLED) // Disable disk caching
         .build()
     Card(modifier = modifier) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = model,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                text = quote.quote,
+            if (showLocalImage) {
+                Image(
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(images.random())
+                )
+            } else {
+                AsyncImage(
+                    model = model,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Box(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(24.dp),
-                color = Color.White,
-                style = MaterialTheme.typography.headlineLarge,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = if (showFullQuote) Int.MAX_VALUE else 4
-            )
+                    .padding(24.dp)
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .graphicsLayer {
+                        shadowElevation = 8.dp.toPx()
+                        clip = true
+                    }
+            ) {
+                Text(
+                    text = quote.quote,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineLarge,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = if (showFullQuote) Int.MAX_VALUE else 4
+                )
+            }
         }
     }
 
@@ -106,6 +130,7 @@ private fun QuoteCardItemListPreview() {
         Quote(
             1,
             "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
+            false,
 
             )
     }
@@ -125,9 +150,10 @@ private fun QuoteCardItemPreview() {
             quote = Quote(
                 1,
                 "Take time once in a while to look up at the stars for at least 5 minutes, in order to comprehend your cosmic significance",
+                false,
 
                 ),
-            cachedImage = true
+            cachedImage = true,
         )
     }
 

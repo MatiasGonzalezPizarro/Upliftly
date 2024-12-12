@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -76,6 +77,11 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.3")
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    testImplementation(libs.androidx.room.testing)
 
     // Navigation
     implementation(libs.navigation.compose)

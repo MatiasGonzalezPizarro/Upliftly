@@ -1,7 +1,10 @@
 package cl.duoc.upliftly.quotes.domain
 
-import cl.duoc.upliftly.quotes.data.model.ApiAdvice
+import kotlinx.coroutines.flow.Flow
 
 interface QuoteRepository {
     suspend fun getRandomAdvice(): Quote
+    fun getFavoriteQuotes(): Flow<List<Quote>>
+    suspend fun isFavoriteQuote(quoteId: Int): Boolean
+    suspend fun toggleFavorite(quote: Quote)
 }

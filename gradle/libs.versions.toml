@@ -4,7 +4,7 @@ retrofit2KotlinxSerializationConverter = "1.0.0"
 adaptive = "1.0.0"
 agp = "8.6.0"
 koin = "4.0.0"
-kotlin = "2.0.0"
+kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -14,11 +14,18 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 material3AdaptiveNavigationSuite = "1.3.1"
 materialIconsExtended = "1.7.5"
+roomRuntime = "2.6.1"
 uiTextGoogleFonts = "1.7.5"
 composeNavigation = "2.8.4"
 serialization = "1.6.3"
+ksp = "2.0.21-1.0.27"
+
 
 [libraries]
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomRuntime" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
@@ -45,12 +52,15 @@ koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-compose-navi
 koin-android = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+devtools-ksp = { module = "com.google.devtools.ksp:devtools-ksp", version.ref = "ksp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
 
 [bundles]
 adaptive = [
