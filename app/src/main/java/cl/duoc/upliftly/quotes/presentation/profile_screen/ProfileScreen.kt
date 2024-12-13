@@ -15,6 +15,7 @@ import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 fun ProfileScreen(modifier: Modifier = Modifier, count: Int = 0) {
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
         UpliftlyLogo(text = stringResource(R.string.favorites, count))
+
     }
 }
 

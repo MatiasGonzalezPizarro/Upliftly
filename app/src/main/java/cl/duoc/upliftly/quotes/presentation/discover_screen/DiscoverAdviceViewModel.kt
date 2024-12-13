@@ -2,6 +2,7 @@ package cl.duoc.upliftly.quotes.presentation.discover_screen
 
 import android.content.Intent
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import cl.duoc.upliftly.quotes.domain.Quote
 import cl.duoc.upliftly.quotes.domain.QuoteRepository
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 class DiscoverAdviceViewModel(
     private val quoteRepository: QuoteRepository
 ) : ViewModel() {
-
+    val favoriteQuotes = quoteRepository.getFavoriteQuotes().asLiveData()
 
     private var _uiState = MutableStateFlow(DiscoverScreenUiState())
     val uiState = _uiState.onStart {
@@ -47,8 +48,13 @@ class DiscoverAdviceViewModel(
     fun onAdviceFavorited(quote: Quote) {
         viewModelScope.launch {
             quoteRepository.toggleFavorite(quote)
+            val updatedFavorites = quoteRepository.getFavoriteQuotes().first()
+            _uiState.update {
+                it.copy(favorites = updatedFavorites)
+            }
         }
     }
+
 
     fun onAdviceShared(quote: Quote): Intent {
         return Intent(Intent.ACTION_SEND).apply {
