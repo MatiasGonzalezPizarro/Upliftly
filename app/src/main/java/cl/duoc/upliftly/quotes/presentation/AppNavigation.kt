@@ -45,6 +45,7 @@ import cl.duoc.upliftly.R
 import cl.duoc.upliftly.quotes.presentation.discover_screen.DiscoverAdviceViewModel
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
+import cl.duoc.upliftly.quotes.presentation.profile_screen.ProfileScreen
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -147,7 +148,10 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                             }
                         }
                     }
-                    2 -> Text("HOLA")
+                    2 -> ProfileScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        count = favoriteQuotes.value.favorites.size
+                    )
                 }
             }
         }
