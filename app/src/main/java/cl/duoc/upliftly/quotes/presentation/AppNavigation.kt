@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -110,6 +111,16 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                                 contentDescription = "share"
                             )
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FloatingActionButton(onClick={
+                            discoverAdviceViewModel.refreshQuotes()
+                        }){
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "refresh"
+                            )
+                        }
+
                     }
                 }
             }

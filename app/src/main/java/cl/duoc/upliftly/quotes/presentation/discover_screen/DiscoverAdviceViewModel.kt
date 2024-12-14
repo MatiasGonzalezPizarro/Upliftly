@@ -54,6 +54,14 @@ class DiscoverAdviceViewModel(
             }
         }
     }
+    fun refreshQuotes() {
+        viewModelScope.launch {
+            val newQuotes = getQuotes()
+            _uiState.update {
+                it.copy(quotes = newQuotes)
+            }
+        }
+    }
 
 
     fun onAdviceShared(quote: Quote): Intent {
