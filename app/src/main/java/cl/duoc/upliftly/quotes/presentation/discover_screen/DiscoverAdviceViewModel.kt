@@ -51,6 +51,7 @@ class DiscoverAdviceViewModel(
             val updatedFavorites = quoteRepository.getFavoriteQuotes().first()
             _uiState.update {
                 it.copy(favorites = updatedFavorites)
+
             }
         }
     }

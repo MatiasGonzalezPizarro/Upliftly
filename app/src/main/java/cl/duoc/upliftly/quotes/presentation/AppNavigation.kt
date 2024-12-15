@@ -1,6 +1,6 @@
 package cl.duoc.upliftly.quotes.presentation
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
@@ -70,8 +71,9 @@ fun AppScaffold(modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState { 5 }
     val coroutineScope = rememberCoroutineScope()
 
-    // Estado para mostrar la pantalla de carga
     var isLoading by remember { mutableStateOf(false) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -89,13 +91,16 @@ fun AppScaffold(modifier: Modifier = Modifier) {
             topBar = { TopBar() },
             modifier = modifier,
             floatingActionButton = {
-                AnimatedVisibility(visible = currentTab == 1) { // Asegúrate de que AnimatedVisibility esté bien implementado
+                AnimatedVisibility(visible = currentTab == 1) {
                     Column {
                         FloatingActionButton(onClick = {
                             coroutineScope.launch {
                                 val currentPage = pagerState.currentPage
-                                val currentQuote = favoriteQuotes.value.quotes.getOrNull(currentPage)
-                                currentQuote?.let { discoverAdviceViewModel.onAdviceFavorited(it) }
+                                val currentQuote =
+                                    favoriteQuotes.value.quotes.getOrNull(currentPage)
+                                currentQuote?.let {
+                                    discoverAdviceViewModel.onAdviceFavorited(it)
+                                }
                             }
                         }) {
                             Icon(
@@ -107,7 +112,8 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                         FloatingActionButton(onClick = {
                             coroutineScope.launch {
                                 val currentPage = pagerState.currentPage
-                                val currentQuote = favoriteQuotes.value.quotes.getOrNull(currentPage)
+                                val currentQuote =
+                                    favoriteQuotes.value.quotes.getOrNull(currentPage)
                                 currentQuote?.let {
                                     context.startActivity(discoverAdviceViewModel.onAdviceShared(it))
                                 }
@@ -124,8 +130,10 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                                 coroutineScope.launch {
                                     isLoading = true
                                     discoverAdviceViewModel.refreshQuotes()
-                                    delay(1700)
+                                    delay(3000)
                                     isLoading = false
+                                    Toast.makeText(context, "❤\uFE0FRefresh your mind ❤\uFE0F", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         ) {
@@ -189,6 +197,7 @@ fun AppScaffold(modifier: Modifier = Modifier) {
 }
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(modifier: Modifier = Modifier) {
@@ -208,7 +217,9 @@ fun TopBar(modifier: Modifier = Modifier) {
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
