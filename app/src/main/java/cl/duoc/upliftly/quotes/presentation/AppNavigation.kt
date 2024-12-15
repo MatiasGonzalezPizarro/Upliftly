@@ -2,6 +2,7 @@ package cl.duoc.upliftly.quotes.presentation
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -48,6 +51,7 @@ import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItem
 import cl.duoc.upliftly.quotes.presentation.home_screen.QuoteCardItemList
 import cl.duoc.upliftly.quotes.presentation.profile_screen.ProfileScreen
 import cl.duoc.upliftly.ui.theme.UpliftlyTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -66,6 +70,9 @@ fun AppScaffold(modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState { 5 }
     val coroutineScope = rememberCoroutineScope()
 
+    // Estado para mostrar la pantalla de carga
+    var isLoading by remember { mutableStateOf(false) }
+
     NavigationSuiteScaffold(
         navigationSuiteItems = {
             tabs.forEachIndexed { index, navigationDestination ->
@@ -82,7 +89,7 @@ fun AppScaffold(modifier: Modifier = Modifier) {
             topBar = { TopBar() },
             modifier = modifier,
             floatingActionButton = {
-                AnimatedVisibility(currentTab == 1) {
+                AnimatedVisibility(visible = currentTab == 1) { // Asegúrate de que AnimatedVisibility esté bien implementado
                     Column {
                         FloatingActionButton(onClick = {
                             coroutineScope.launch {
@@ -112,20 +119,25 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        FloatingActionButton(onClick={
-                            discoverAdviceViewModel.refreshQuotes()
-                        }){
+                        FloatingActionButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    isLoading = true
+                                    discoverAdviceViewModel.refreshQuotes()
+                                    delay(1700)
+                                    isLoading = false
+                                }
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
                                 contentDescription = "refresh"
                             )
                         }
-
                     }
                 }
             }
         ) { innerPadding ->
-            Log.i("AppScaffold", "favoriteQuotes: ${favoriteQuotes.value.favorites}")
             Box(
                 Modifier
                     .fillMaxSize(),
@@ -145,7 +157,10 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                                 discoverAdviceViewModel.updateCurrentAdvice(quote)
                             }
                             if (quote == null) {
-                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
                                     CircularProgressIndicator()
                                 }
                             } else {
@@ -159,15 +174,20 @@ fun AppScaffold(modifier: Modifier = Modifier) {
                             }
                         }
                     }
+
                     2 -> ProfileScreen(
                         modifier = Modifier.fillMaxSize(),
                         count = favoriteQuotes.value.favorites.size
                     )
                 }
             }
+            if (isLoading) {
+                LoadingScreen()
+            }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,6 +202,21 @@ fun TopBar(modifier: Modifier = Modifier) {
         },
         modifier = modifier
     )
+
+}
+
+@Composable
+fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Loading...", color = MaterialTheme.colorScheme.primary)
+        }
+    }
 
 }
 
